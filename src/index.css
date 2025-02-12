@@ -66,3 +66,69 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.bg-black {
+  background-color: black;
+}
+
+.text-white {
+  color: white;
+}
+
+.active {
+  background-color: white !important;
+  color: red !important;
+}
+
+
+
+.wd-lesson {
+display: flex;
+align-items: center;
+justify-content: space-between; 
+border-left: 4px solid green;
+}
+
+
+.wd-lesson-icons {
+display: flex;
+align-items: center;
+gap: 10px; 
+margin-right: 10px；
+}
+
+
+.wd-assignment-content {
+flex-grow: 1;
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
+
+.wd-assignment-link {
+font-size: 1.2rem;
+font-weight: bold;
+text-decoration: none;
+color: black;
+}
+
+.wd-assignments-informs {
+color: gray;
+font-size: 0.9rem;
+margin: 5px 0 0 0;
+}
+
+.wd-lesson-controls {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.wd-border-total {
+  border-width: 1px;
+  border-color: #ccc;
+  border-style: solid;
+  border-radius: 20px;
+
+}
+
