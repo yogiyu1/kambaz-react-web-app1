@@ -8,9 +8,14 @@ import Form from 'react-bootstrap/Form';
 import { Button} from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import { ListGroup } from "react-bootstrap";
-import {LuNotebookText} from "react-icons/lu"
+import {LuNotebookText} from "react-icons/lu";
+import { FaCaretDown } from"react-icons/fa";
+import { useParams } from "react-router";
+import * as db from "../../Database";
 
 export default function Assignments(){
+    const { cid } = useParams()
+    const assignments = db.assignments.filter((assignment) => assignment.course === cid);
     return(
         <div id="wd-assignments" className="text-nowrap">
             {/* <input placeholder="Search for Assignments" style={{ marginRight: "8px" }} id="wd-search-assignment" />
@@ -32,24 +37,66 @@ export default function Assignments(){
             </InputGroup>
             <br /><br /><br /><br />
 
+            
             <ListGroup className="rounded-0" id="wd-modules">
-                <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
-                <div className="wd-title d-flex align-items-center justify-content-between p-3 ps-2 bg-secondary text-dark">
+                <ListGroup.Item className="wd-module p-0 mb-0 fs-5 border-gray">
+                    <div className="wd-title d-flex align-items-center justify-content-between p-3 ps-2 bg-secondary text-dark">
 
-            <div className="d-flex align-items-center">
-                <BsGripVertical className="me-2 fs-3" />
-                <span>ASSIGNMENTS</span>
-            </div>
+                        <div className="d-flex align-items-center">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span> <FaCaretDown />  ASSIGNMENTS</span>
+                        </div>
 
-            <div className="d-flex align-items-center gap-2">
-            <p className="border border-dark rounded-pill px-3 py-1 mb-0">40% of Total</p>
+                        <div className="d-flex align-items-center gap-2">
+                        <p className="border border-dark rounded-pill px-3 py-1 mb-0">40% of Total</p>
 
 
-                <span className="fs-4">+</span>
-                <IoEllipsisVertical className="fs-4" />
-            </div>
-            </div>
+                            <span className="fs-4">+</span>
+                            <IoEllipsisVertical className="fs-4" />
+                        </div>
+                    </div> 
+                </ListGroup.Item>
 
+             
+                {assignments.map((assignment) => (
+                    <ListGroup.Item key={assignment._id} className="wd-lesson p-3 ps-1">
+                    <Row className="align-items-center">
+                        <Col sm={1} className="text-center">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <LuNotebookText className="fs-3 text-success" />
+                        </Col>
+
+                        <Col sm={8}>
+                        <Link
+                            to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+                            className="wd-assignment-link text-dark fw-bold fs-5"
+                        >
+                            {assignment.title}
+                        </Link>
+                        <p className="wd-assignments-informs text-muted mb-0">
+                            <span className="text-danger">
+                            {assignment.detail.modules.join(", ")}
+                            </span>{" "}
+                            | <strong>Not available until</strong> {assignment.detail.availableFrom}
+                            <br />
+                            <strong>Due</strong> {assignment.detail.dueDate} | {assignment.detail.points} pts
+                        </p>
+                        </Col>
+
+                        <Col sm={3} className="text-end">
+                            <LessonControlButtons />
+                        </Col>
+                    </Row>
+                    </ListGroup.Item>
+                ))}
+            </ListGroup>
+        </div>
+    );
+}
+
+
+{/* 
+    
                 <ListGroup.Item className="wd-lesson p-3 ps-1">
                     <Row className="align-items-center">
                         <Col sm={1} className="text-center">
@@ -104,34 +151,33 @@ export default function Assignments(){
                 </ListGroup.Item>
 
 
-                    <ListGroup.Item className="wd-lesson p-3 ps-1">
-                        <Row className="align-items-center">
-            
-                            <Col sm={1} className="text-center">
-                                <BsGripVertical className="me-2 fs-3" />
-                                <LuNotebookText className="fs-3 text-success" />
-                            </Col>
+                <ListGroup.Item className="wd-lesson p-3 ps-1">
+                    <Row className="align-items-center">
+        
+                        <Col sm={1} className="text-center">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <LuNotebookText className="fs-3 text-success" />
+                        </Col>
 
-                            <Col sm={8}>
-                                <Link
-                                    to="/Kambaz/Courses/1234/Assignments/A3"
-                                    className="wd-assignment-link text-dark fw-bold fs-5">
-                                    A3
-                                </Link>
-                                <p className="wd-assignments-informs text-muted mb-0">
-                                    <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 20 at 12:00am
-                                    <br />
-                                    <strong>Due</strong> May 27 at 11:59pm | 100 pts
-                                </p>
-                            </Col>
+                        <Col sm={8}>
+                            <Link
+                                to="/Kambaz/Courses/1234/Assignments/A3"
+                                className="wd-assignment-link text-dark fw-bold fs-5">
+                                A3
+                            </Link>
+                            <p className="wd-assignments-informs text-muted mb-0">
+                                <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 20 at 12:00am
+                                <br />
+                                <strong>Due</strong> May 27 at 11:59pm | 100 pts
+                            </p>
+                        </Col>
 
-                            <Col sm={3} className="text-end">
-                                <LessonControlButtons />
-                            </Col>
-                        </Row>
-                    </ListGroup.Item>
+                        <Col sm={3} className="text-end">
+                            <LessonControlButtons />
+                        </Col>
+                    </Row>
                 </ListGroup.Item>
-            </ListGroup>
-        </div>
-    );
-}
+                </ListGroup.Item>
+            </ListGroup> */}
+
+

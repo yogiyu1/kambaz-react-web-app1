@@ -1,45 +1,18 @@
-import { useLocation } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
+import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
-
 export default function TOC() {
-  const location = useLocation();
-
-  const isLabsActive = location.pathname === "/Labs";
-  const isLab1Active = location.pathname === "/Labs" || location.pathname === "/Labs/Lab1";
-
+  const { pathname } = useLocation();
   return (
-    <Nav variant="pills">
-      <Nav.Item>
-        <Nav.Link to="/Labs" as={Link} active={!isLab1Active && isLabsActive}>
-          Labs
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link to="/Labs/Lab1" as={Link} active={!isLabsActive && isLab1Active}>
-          Lab 1
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link to="/Labs/Lab2" as={Link} active={location.pathname === "/Labs/Lab2"}>
-          Lab 2
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link to="/Labs/Lab3" as={Link} active={location.pathname === "/Labs/Lab3"}>
-          Lab 3
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link to="/Kambaz" as={Link} active={location.pathname === "/Kambaz"}>
-          Kambaz
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link href="https://github.com/yogiyu1/kambaz-react-web-app1">
-          My GitHub
-        </Nav.Link>
-      </Nav.Item>
+    <Nav variant="pills" id="wd-toc">
+      <Nav.Item> <Nav.Link as={Link} to="/Labs/Lab1" id="wd-a1"
+          active={pathname.includes("Lab1")}> Lab 1 </Nav.Link> </Nav.Item>
+      <Nav.Item> <Nav.Link as={Link} to="/Labs/Lab2" id="wd-a2"
+          active={pathname.includes("Lab2")}> Lab 2 </Nav.Link> </Nav.Item>
+      <Nav.Item> <Nav.Link as={Link} to="/Labs/Lab3" id="wd-a3"
+          active={pathname.includes("Lab3")}> Lab 3 </Nav.Link> </Nav.Item>
+      <Nav.Item> <Nav.Link as={Link} to="/Kambaz" id="wd-a3"> Kambaz </Nav.Link> </Nav.Item>
+      <Nav.Item> <Nav.Link href="https://github.com/yogiyu1/kambaz-react-web-app1" target="_blank"> My GitHub </Nav.Link> </Nav.Item>
     </Nav>
   );
 }

@@ -29,10 +29,10 @@ export default function ModulesControls() {
        </Dropdown.Menu>
      </Dropdown>
      <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-view-progress">
-       Module
+       View Progress
      </Button>
      <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-collapse-all">
-       Module
+        Collapse All
      </Button>
    </div>
 );}
