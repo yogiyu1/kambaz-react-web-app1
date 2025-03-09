@@ -8,7 +8,7 @@
       "points": 100,
       "availableFrom": "May 6 at 12:00am",
       "description": "This assignment is avaiable online. ",
-      "modules": ["Multiple Modules"]
+      "modules": ["Modules 1"]
     }
   },
   {
@@ -19,7 +19,7 @@
       "dueDate": "May 15 at 11:59pm",
       "points": 90,
       "availableFrom": "May 7 at 12:00am",
-      "modules": ["Module 1"]
+      "modules": ["Module 2"]
     }
   },
   {
@@ -30,7 +30,7 @@
       "dueDate": "May 20 at 11:59pm",
       "points": 95,
       "availableFrom": "May 8 at 12:00am",
-      "modules": ["Module 2"]
+      "modules": ["Module 3"]
     }
   },
   {

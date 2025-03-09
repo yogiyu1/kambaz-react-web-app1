@@ -4,8 +4,9 @@ import Card from 'react-bootstrap/Card';
 import Button from "react-bootstrap/Button";
 import { Col }from "react-bootstrap";
 import * as db from "./Database";
+import { useState } from "react";
 export default function Dashboard() {
-    const courses = db.courses;
+    const [courses, setCourses] = useState<any[]>(db.courses);
     return (
         <div id="wd-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
@@ -13,8 +14,6 @@ export default function Dashboard() {
             <div id="wd-dashboard-courses">
             <Row xs={1} md={5} className="g-4">
                 {courses.map((course) => (
-
-                
                 <Col className="wd-dashboard-course" style={{ width: "300px" }}>
                     <Card>
                         <Link to={`/Kambaz/Courses/${course._id}/Home`}
