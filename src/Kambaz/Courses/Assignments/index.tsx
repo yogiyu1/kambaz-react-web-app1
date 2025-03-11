@@ -12,20 +12,30 @@ import {LuNotebookText} from "react-icons/lu";
 import { FaCaretDown } from"react-icons/fa";
 import { useParams } from "react-router";
 import * as db from "../../Database";
+import { useNavigate } from "react-router-dom";
 
-export default function Assignments(){
+export default function Assignments({ courseId }: { courseId: string }){
     const { cid } = useParams()
+    const navigate = useNavigate();
     const assignments = db.assignments.filter((assignment) => assignment.course === cid);
     return(
         <div id="wd-assignments" className="text-nowrap">
-            {/* <input placeholder="Search for Assignments" style={{ marginRight: "8px" }} id="wd-search-assignment" />
-            <button style={{ marginRight: "8px" }} id="wd-add-assignment-group">+ Group</button>
-            <button style={{ marginRight: "8px" }} id="wd-add-assignment">+ Assignment</button>
-            <h3 id="wd-assignments-title">ASSIGNMENTS 40% of Total <button>+</button> </h3> */}
-            <Button variant="danger" size="lg" className="me-1 float-end rounded-0" id="wd-add-module-btn">
+    
+            {/* <Button variant="danger" size="lg" className="me-1 float-end rounded-0" id="wd-add-module-btn">
+            <FaPlus className="position-relative me-3" style={{ bottom: "1px" }} />
+                Assignment
+            </Button> */}
+             <Button 
+                variant="danger" 
+                size="lg" 
+                className="me-1 float-end rounded-0" 
+                id="wd-add-module-btn"
+                onClick={() => navigate(`/Kambaz/Courses/${courseId}/Assignments/New`)}
+            >
             <FaPlus className="position-relative me-3" style={{ bottom: "1px" }} />
                 Assignment
             </Button>
+
             <Button variant="secondary" size="lg" className="me-1 float-end rounded-0" id="wd-add-module-btn">
             <FaPlus className="position-relative me-3" style={{ bottom: "1px" }} />
                 Group

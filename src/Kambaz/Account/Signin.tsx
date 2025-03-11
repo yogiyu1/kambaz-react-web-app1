@@ -15,9 +15,8 @@ export default function Signin(){
        if (!user) return;
        dispatch(setCurrentUser(user));
        navigate("/Kambaz/Dashboard");
-  };
+       };
     return(
-
         <div id="wd-signin-screen">
         <h1>Sign in</h1>
         <Form.Control defaultValue={credentials.username}
@@ -33,6 +32,5 @@ export default function Signin(){
         <Button onClick={signin} id="wd-signin-btn" className="w-100" > Sign in </Button>
         <Link id="wd-signup-link" to="/Kambaz/Account/Signup">Sign up</Link>
       </div>
-
     )
 }

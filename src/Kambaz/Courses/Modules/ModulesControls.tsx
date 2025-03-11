@@ -4,14 +4,17 @@ import { Button, Dropdown } from "react-bootstrap";
 import Banmark from "./Banmark";
 import ModuleEditor from "./ModuleEditor";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 export default function ModulesControls({ moduleName, setModuleName, addModule }:
   { moduleName: string; setModuleName: (title: string) => void; addModule: () => void; }) {
    const [show, setShow] = useState(false);
    const handleClose = () => setShow(false);
    const handleShow = () => setShow(true);
-
+   const { currentUser } = useSelector((state: any) => state.accountReducer);
  return (
    <div id="wd-modules-controls" className="text-nowrap">
+    {currentUser.role === "FACULTY" && (
+                <>
      <Button variant="danger"  onClick={handleShow}  size="lg" className="me-1 float-end" id="wd-add-module-btn">
        <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
        Module
@@ -35,6 +38,8 @@ export default function ModulesControls({ moduleName, setModuleName, addModule }
          </Dropdown.Item>
        </Dropdown.Menu>
      </Dropdown>
+     </>
+            )}
      <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-view-progress">
        View Progress
      </Button>

@@ -1,8 +1,8 @@
 [
     {
       "_id": "123",
-      "username": "iron_man",
-      "password": "stark123",
+      "username": "iron",
+      "password": "123",
       "firstName": "Tony",
       "lastName": "Stark",
       "email": "tony@stark.com",
@@ -30,7 +30,7 @@
     {
       "_id": "345",
       "username": "black_widow",
-      "password": "romanoff123",
+      "password": "",
       "firstName": "Natasha",
       "lastName": "Romanoff",
       "email": "natasha@avengers.com",

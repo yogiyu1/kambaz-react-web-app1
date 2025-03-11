@@ -3,36 +3,19 @@ import LessonControlButtons1 from "./LessonControlButtons1";
 import LessonControlButtons from "./LessonControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { useParams } from "react-router";
-// import * as db from "../../Database";
 import { useState } from "react";
-// import { v4 as uuidv4 } from "uuid";
 import { FormControl } from "react-bootstrap";
 import { addModule, editModule, updateModule, deleteModule } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function Modules() {
     const { cid } = useParams();
-    // const [modules, setModules] = useState<any[]>(db.modules);
     const [moduleName, setModuleName] = useState("");
-//     const addModule = () => {
-//     setModules([ ...modules, { _id: uuidv4(), name: moduleName, course: cid, lessons: [] } ]);
-//     setModuleName("");
-//   };
-//     const deleteModule = (moduleId: string) => {
-//         setModules(modules.filter((m) => m._id !== moduleId));
-//     };
-//     const editModule = (moduleId: string) => {
-//         setModules(modules.map((m) => (m._id === moduleId ? { ...m, editing: true } : m)));
-//     };
-//     const updateModule = (module: any) => {
-//     setModules(modules.map((m) => (m._id === module._id ? module : m)));
-//     };  
     const { modules } = useSelector((state: any) => state.modulesReducer);
     const dispatch = useDispatch();
-    
     return (
         <div className="wd-modules">
-        <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={() => {
+        <ModulesControls moduleName={moduleName} setModuleName={setModuleName} addModule={() => {
           dispatch(addModule({ name: moduleName, course: cid }));
           setModuleName(""); 
         }} />
@@ -58,7 +41,7 @@ export default function Modules() {
                 deleteModule={(moduleId) => {
                     dispatch(deleteModule(moduleId));
                   }}
-                  editModule={(moduleId) => dispatch(editModule(moduleId))} />
+                editModule={(moduleId) => dispatch(editModule(moduleId))} />
             </div>
             {module.lessons && (
               <ul className="wd-lessons list-group rounded-0">
