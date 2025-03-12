@@ -4,6 +4,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAssignment, updateAssignment } from '../../../redux/assignmentsSlice'; // Import the actions
+import * as db from '../../Database';
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
@@ -12,28 +13,22 @@ export default function AssignmentEditor() {
     const assignmentsState = useSelector((state: any) => state.assignments);
     const existingAssignment = assignmentsState?.assignments?.find((assignment: any) => assignment._id === aid);
 
+    // const [assignments, setAssignments] = useState<any[]>(db.assignments);
     useEffect(() => {
         console.log("existingAssignment:", existingAssignment);
     }, [existingAssignment]);
 
     const [assignment, setAssignment] = useState({
         _id: aid || uuidv4(),
-        name: existingAssignment?.name || '',
-        description: existingAssignment?.description || '',
-        points: existingAssignment?.points || 100,
-        dueDate: existingAssignment?.dueDate || '',
-        availableFrom: existingAssignment?.availableFrom || '',
-        availableUntil: existingAssignment?.availableUntil || '',
-        assignmentGroup: existingAssignment?.assignmentGroup || 'ASSIGNMENTS',
-        displayGradeAs: existingAssignment?.displayGradeAs || 'PERCENTAGE',
-        submissionType: existingAssignment?.submissionType || 'ONLINE',
-        onlineEntryOptions: existingAssignment?.onlineEntryOptions || {
-            textEntry: false,
-            websiteURL: true,
-            mediaRecordings: false,
-            studentAnnotation: false,
-        },
+        title: existingAssignment?.title || '',
         course: cid,
+        detail: {
+            dueDate: existingAssignment?.detail?.dueDate || '',
+            points: existingAssignment?.detail?.points || 100,
+            availableFrom: existingAssignment?.detail?.availableFrom || '',
+            description: existingAssignment?.detail?.description || '',
+            modules: existingAssignment?.detail?.modules || [],
+        },
     });
 
     useEffect(() => {
@@ -43,6 +38,9 @@ export default function AssignmentEditor() {
     }, [existingAssignment]);
 
     const handleSave = () => {
+        console.log("Save button clicked");
+        console.log("new edit page assignment:", assignment);
+        console.log("new edit page existingAssignment:", existingAssignment);
         if (existingAssignment) {
             dispatch(updateAssignment(assignment)); // Dispatch the updateAssignment action
         } else {
@@ -56,173 +54,135 @@ export default function AssignmentEditor() {
     };
 
     console.log("assignment:", assignment);
+    console.log("existingAssignment:", existingAssignment);
     return (
-        <div>
-            <h1>{existingAssignment ? 'Edit Assignment' : 'Create New Assignment'}</h1>
-            <Form>
-                <Form.Group controlId="assignmentName">
-                    <Form.Label>Name</Form.Label>
+        <Form.Group className="container p-3 w-50 mx-2">
+    
+          <Form.Group className="mb-3">
+            <Form.Label>Assignment Name</Form.Label>
+            <Form.Control type="text" defaultValue={assignment.title} />
+          </Form.Group>
+    
+          <Form.Group className="mb-3">
+            <Form.Control
+              as="textarea"
+              style={{ height: "200px" }}
+              defaultValue={assignment.detail.description}
+            />
+          </Form.Group>
+    
+          <Form.Group as={Row} className="mb-3 align-items-center">
+            <Col sm={4} className="text-end">
+              <Form.Label>Points</Form.Label>
+            </Col>
+            <Col sm={8} className="ms-auto">
+              <Form.Control type="number" defaultValue={assignment.detail?.points || 100} />
+            </Col>
+          </Form.Group>
+    
+          <Form.Group as={Row} className="mb-3 align-items-center">
+            <Form.Label column sm={4} className="text-end">
+              Assignment Group
+            </Form.Label>
+            <Col sm={8}>
+              <Form.Select>
+                <option value="QUIZZES">QUIZZES</option>
+                <option value="PROJECT">PROJECT</option>
+                <option value="ASSIGNMENTS" selected>ASSIGNMENTS</option>
+                <option value="EXAMS">EXAMS</option>
+              </Form.Select>
+            </Col>
+          </Form.Group>
+    
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={4} className="text-end">
+              Display Grade as
+            </Form.Label>
+            <Col sm={8} className="ms-auto">
+              <Form.Select>
+                <option value="PERCENTAGE" selected>Percentage</option>
+                <option value="GRADE">Grade</option>
+              </Form.Select>
+            </Col>
+          </Form.Group>
+    
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={4} className="text-end">
+              Submission Type
+            </Form.Label>
+            <Col sm={8} className="ms-auto">
+              <Form.Group className="p-3 border rounded">
+                <Form.Select>
+                  <option value="ONLINE" selected>Online</option>
+                  <option value="INPERSON">In-person</option>
+                </Form.Select>
+                <Form.Label className="mt-3">Online Entry Options</Form.Label>
+                <div className="ms-3">
+                  <Form.Check type="checkbox" label="Text Entry" />
+                  <Form.Check type="checkbox" label="Website URL" defaultChecked />
+                  <Form.Check type="checkbox" label="Media Recordings" />
+                  <Form.Check type="checkbox" label="Student Annotation" />
+                  <Form.Check type="checkbox" label="File Uploads" />
+                </div>
+              </Form.Group>
+            </Col>
+          </Form.Group>
+    
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={4} className="text-end">
+              Assign
+            </Form.Label>
+            <Col sm={8} className="ms-auto">
+              <Form.Group className="p-3 border rounded">
+                <Form.Group className="mb-3">
+                  <Form.Label>Assign to</Form.Label>
+                  <Form.Control type="text" placeholder="Everyone" />
+                </Form.Group>
+    
+                <Row className="mb-3">
+                  <Col>
+                    <Form.Label>Due</Form.Label>
                     <Form.Control
-                        type="text"
-                        value={assignment.name}
-                        onChange={(e) => setAssignment({ ...assignment, name: e.target.value })}
+                      type="datetime-local"
+                      defaultValue={assignment.detail.dueDate}
                     />
-                </Form.Group>
-                <Form.Group controlId="assignmentDescription">
-                    <Form.Label>Description</Form.Label>
+                  </Col>
+                </Row>
+    
+                <Row>
+                  <Col sm={6}>
+                    <Form.Label>Available from</Form.Label>
+                  </Col>
+                  <Col sm={6}>
+                    <Form.Label>Until</Form.Label>
+                  </Col>
+                  <Col sm={6}>
                     <Form.Control
-                        as="textarea"
-                        rows={3}
-                        value={assignment.description}
-                        onChange={(e) => setAssignment({ ...assignment, description: e.target.value })}
+                      type="datetime-local"
+                      defaultValue={assignment.detail.availableFrom}
                     />
-                </Form.Group>
-                <Form.Group controlId="assignmentPoints">
-                    <Form.Label>Points</Form.Label>
+                  </Col>
+                  <Col sm={6}>
                     <Form.Control
-                        type="number"
-                        value={assignment.points}
-                        onChange={(e) => setAssignment({ ...assignment, points: parseInt(e.target.value) })}
+                      type="datetime-local"
+                      defaultValue={assignment.detail.dueDate}
                     />
-                </Form.Group>
-                <Form.Group controlId="assignmentDueDate">
-                    <Form.Label>Due Date</Form.Label>
-                    <Form.Control
-                        type="date"
-                        value={assignment.dueDate}
-                        onChange={(e) => setAssignment({ ...assignment, dueDate: e.target.value })}
-                    />
-                </Form.Group>
-                <Form.Group controlId="assignmentAvailableFrom">
-                    <Form.Label>Available From</Form.Label>
-                    <Form.Control
-                        type="date"
-                        value={assignment.availableFrom}
-                        onChange={(e) => setAssignment({ ...assignment, availableFrom: e.target.value })}
-                    />
-                </Form.Group>
-                <Form.Group controlId="assignmentAvailableUntil">
-                    <Form.Label>Available Until</Form.Label>
-                    <Form.Control
-                        type="date"
-                        value={assignment.availableUntil}
-                        onChange={(e) => setAssignment({ ...assignment, availableUntil: e.target.value })}
-                    />
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={4} className="text-end">
-                        Assignment Group
-                    </Form.Label>
-                    <Col sm={8}>
-                        <Form.Select
-                            value={assignment.assignmentGroup}
-                            onChange={(e) => setAssignment({ ...assignment, assignmentGroup: e.target.value })}
-                        >
-                            <option value="QUIZZES">QUIZZES</option>
-                            <option value="PROJECT">PROJECT</option>
-                            <option value="ASSIGNMENTS">ASSIGNMENTS</option>
-                            <option value="EXAMS">EXAMS</option>
-                        </Form.Select>
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={4} className="text-end">
-                        Display Grade as
-                    </Form.Label>
-                    <Col sm={8} className="ms-auto">
-                        <Form.Select
-                            value={assignment.displayGradeAs}
-                            onChange={(e) => setAssignment({ ...assignment, displayGradeAs: e.target.value })}
-                        >
-                            <option value="PERCENTAGE">Percentage</option>
-                            <option value="GRADE">Grade</option>
-                        </Form.Select>
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={4} className="text-end">
-                        Submission Type
-                    </Form.Label>
-                    <Col sm={8} className="ms-auto">
-                        <Form.Select
-                            value={assignment.submissionType}
-                            onChange={(e) => setAssignment({ ...assignment, submissionType: e.target.value })}
-                        >
-                            <option value="ONLINE">Online</option>
-                            <option value="INPERSON">In-person</option>
-                        </Form.Select>
-                        {assignment.submissionType === 'ONLINE' && (
-                            <div className="p-3 border rounded mt-3">
-                                <Form.Label>Online Entry Options</Form.Label>
-                                <div className="ms-3">
-                                    <Form.Check
-                                        type="checkbox"
-                                        label="Text Entry"
-                                        checked={assignment.onlineEntryOptions.textEntry}
-                                        onChange={(e) =>
-                                            setAssignment({
-                                                ...assignment,
-                                                onlineEntryOptions: {
-                                                    ...assignment.onlineEntryOptions,
-                                                    textEntry: e.target.checked,
-                                                },
-                                            })
-                                        }
-                                    />
-                                    <Form.Check
-                                        type="checkbox"
-                                        label="Website URL"
-                                        checked={assignment.onlineEntryOptions.websiteURL}
-                                        onChange={(e) =>
-                                            setAssignment({
-                                                ...assignment,
-                                                onlineEntryOptions: {
-                                                    ...assignment.onlineEntryOptions,
-                                                    websiteURL: e.target.checked,
-                                                },
-                                            })
-                                        }
-                                    />
-                                    <Form.Check
-                                        type="checkbox"
-                                        label="Media Recordings"
-                                        checked={assignment.onlineEntryOptions.mediaRecordings}
-                                        onChange={(e) =>
-                                            setAssignment({
-                                                ...assignment,
-                                                onlineEntryOptions: {
-                                                    ...assignment.onlineEntryOptions,
-                                                    mediaRecordings: e.target.checked,
-                                                },
-                                            })
-                                        }
-                                    />
-                                    <Form.Check
-                                        type="checkbox"
-                                        label="Student Annotation"
-                                        checked={assignment.onlineEntryOptions.studentAnnotation}
-                                        onChange={(e) =>
-                                            setAssignment({
-                                                ...assignment,
-                                                onlineEntryOptions: {
-                                                    ...assignment.onlineEntryOptions,
-                                                    studentAnnotation: e.target.checked,
-                                                },
-                                            })
-                                        }
-                                    />
-                                </div>
-                            </div>
-                        )}
-                    </Col>
-                </Form.Group>
-                <Button variant="primary" onClick={handleSave}>
+                  </Col>
+                </Row>
+              </Form.Group>
+            </Col>
+          </Form.Group>
+    
+          <hr />
+    
+          <div className="float-end">
+            <Button variant="primary" onClick={handleSave}>
                     Save
-                </Button>
-                <Button variant="secondary" onClick={handleCancel} className="ms-2">
+            </Button>
+            <Button variant="secondary" onClick={handleCancel} className="ms-2">
                     Cancel
-                </Button>
-            </Form>
-        </div>
-    );
+            </Button>
+          </div>
+        </Form.Group>
+      );
 }

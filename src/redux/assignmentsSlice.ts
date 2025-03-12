@@ -2,21 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Assignment {
     _id: string;
-    name: string;
-    description: string;
-    points: number;
-    dueDate: string;
-    availableFrom: string;
-    availableUntil: string;
-    assignmentGroup: string;
-    displayGradeAs: string;
-    submissionType: string;
-    onlineEntryOptions: {
-        textEntry: boolean;
-        websiteURL: boolean;
-        mediaRecordings: boolean;
-        studentAnnotation: boolean;
-    };
+    title: string;
+    detail: {
+        dueDate: string;
+        description: string;
+        availableFrom: string;
+        moduels: string[];
+        points: number;
+    }
     course: string;
 }
 
@@ -41,8 +34,11 @@ const assignmentsSlice = createSlice({
                 state.assignments[index] = action.payload;
             }
         },
+        deleteAssignment: (state, action: PayloadAction<string>) => {
+            state.assignments = state.assignments.filter(a => a._id !== action.payload);
+        },
     },
 });
 
-export const { addAssignment, updateAssignment } = assignmentsSlice.actions;
+export const { addAssignment, updateAssignment, deleteAssignment} = assignmentsSlice.actions;
 export default assignmentsSlice.reducer;
