@@ -14,14 +14,16 @@ import { useParams } from "react-router";
 import * as db from "../../Database";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from '../../../redux/assignmentsSlice'; // Import the delete action
+import { deleteAssignment } from './reducer'; // Import the delete action
 
 export default function Assignments({ courseId }: { courseId: string }) {
     const { cid } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const assignmentsState = useSelector((state: any) => state.assignments);
-    const assignments = db.assignments.filter((assignment) => assignment.course === cid);
+    const assignmentsState = useSelector((state: any) => state.assignmentsReducer);
+    console.log("index assignmentsState:", assignmentsState);
+    const assignments = assignmentsState?.assignments?.filter((assignment: any) => assignment.course === cid);
+    console.log("assignments:", assignments);
     const [showModal, setShowModal] = useState(false);
     const [assignmentToDelete, setAssignmentToDelete] = useState<any>(null);
 

@@ -3,14 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addAssignment, updateAssignment } from '../../../redux/assignmentsSlice'; // Import the actions
-import * as db from '../../Database';
+import { addAssignment, updateAssignment} from './reducer'; // Import the actions
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const assignmentsState = useSelector((state: any) => state.assignments);
+    const assignmentsState = useSelector((state: any) => state.assignmentsReducer);
+    console.log("assignmentsState:", assignmentsState);
     const existingAssignment = assignmentsState?.assignments?.find((assignment: any) => assignment._id === aid);
 
     // const [assignments, setAssignments] = useState<any[]>(db.assignments);
