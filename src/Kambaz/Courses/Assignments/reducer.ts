@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { assignments } from "../../Database";
-import { v4 as uuidv4 } from "uuid";
 
 
 
@@ -31,7 +30,9 @@ const assignmentsSlice = createSlice({
     initialState,
     reducers: {
         addAssignment: (state, action: PayloadAction<Assignment>) => {
-            state.assignments.push(action.payload);
+            // state.assignments.push(action.payload);
+            console.log("add payload:", action.payload);
+            state.assignments = [...state.assignments, action.payload];
         },
         updateAssignment: (state, action: PayloadAction<Assignment>) => {
             const index = state.assignments.findIndex(a => a._id === action.payload._id);

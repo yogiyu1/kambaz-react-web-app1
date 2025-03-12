@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from "react-router";
 import { FaPlus, FaTrash } from "react-icons/fa6";
 import LessonControlButtons from "../Modules/LessonControlButtons";
@@ -11,7 +11,6 @@ import { FaSearch } from "react-icons/fa";
 import { LuNotebookText } from "react-icons/lu";
 import { FaCaretDown } from "react-icons/fa";
 import { useParams } from "react-router";
-import * as db from "../../Database";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteAssignment } from './reducer'; // Import the delete action

@@ -1,9 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addAssignment, updateAssignment} from './reducer'; // Import the actions
+import { addAssignment, updateAssignment } from './reducer'; // Import the actions
+
+interface AssignmentDetail {
+    dueDate: string;
+    points: number;
+    availableFrom: string;
+    description: string;
+    modules: string[];
+}
+
+interface Assignment {
+    _id: string;
+    title: string;
+    course: string;
+    detail: AssignmentDetail;
+}
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
@@ -13,15 +28,10 @@ export default function AssignmentEditor() {
     console.log("assignmentsState:", assignmentsState);
     const existingAssignment = assignmentsState?.assignments?.find((assignment: any) => assignment._id === aid);
 
-    // const [assignments, setAssignments] = useState<any[]>(db.assignments);
-    useEffect(() => {
-        console.log("existingAssignment:", existingAssignment);
-    }, [existingAssignment]);
-
-    const [assignment, setAssignment] = useState({
+    const [assignment, setAssignment] = useState<Assignment>({
         _id: aid || uuidv4(),
         title: existingAssignment?.title || '',
-        course: cid,
+        course: cid || '',
         detail: {
             dueDate: existingAssignment?.detail?.dueDate || '',
             points: existingAssignment?.detail?.points || 100,
@@ -38,9 +48,6 @@ export default function AssignmentEditor() {
     }, [existingAssignment]);
 
     const handleSave = () => {
-        console.log("Save button clicked");
-        console.log("new edit page assignment:", assignment);
-        console.log("new edit page existingAssignment:", existingAssignment);
         if (existingAssignment) {
             dispatch(updateAssignment(assignment)); // Dispatch the updateAssignment action
         } else {
@@ -60,7 +67,9 @@ export default function AssignmentEditor() {
     
           <Form.Group className="mb-3">
             <Form.Label>Assignment Name</Form.Label>
-            <Form.Control type="text" defaultValue={assignment.title} />
+            <Form.Control type="text" 
+            defaultValue={assignment.title} 
+            onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}/>
           </Form.Group>
     
           <Form.Group className="mb-3">
@@ -68,7 +77,8 @@ export default function AssignmentEditor() {
               as="textarea"
               style={{ height: "200px" }}
               defaultValue={assignment.detail.description}
-            />
+              onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, description: e.target.value } })}
+              />
           </Form.Group>
     
           <Form.Group as={Row} className="mb-3 align-items-center">
@@ -76,7 +86,9 @@ export default function AssignmentEditor() {
               <Form.Label>Points</Form.Label>
             </Col>
             <Col sm={8} className="ms-auto">
-              <Form.Control type="number" defaultValue={assignment.detail?.points || 100} />
+              <Form.Control type="number" defaultValue={assignment.detail?.points || 100} 
+              onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, points: parseInt(e.target.value) } })}
+              />
             </Col>
           </Form.Group>
     
