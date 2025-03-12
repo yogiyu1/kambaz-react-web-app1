@@ -1,33 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
-import { useDispatch, useSelector } from 'react-redux';
-import { addAssignment, updateAssignment } from '../../../redux/assignmentsSlice'; // Import the actions
+import { useDispatch } from 'react-redux';
+import { addAssignment } from '../../../redux/assignmentsSlice'; // Import the addAssignment action
 
-export default function AssignmentEditor() {
-    const { cid, aid } = useParams();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const assignmentsState = useSelector((state: any) => state.assignments);
-    const existingAssignment = assignmentsState?.assignments?.find((assignment: any) => assignment._id === aid);
-
-    useEffect(() => {
-        console.log("existingAssignment:", existingAssignment);
-    }, [existingAssignment]);
-
+export default function NewAssignment() {
+    const { cid } = useParams();
     const [assignment, setAssignment] = useState({
-        _id: aid || uuidv4(),
-        name: existingAssignment?.name || '',
-        description: existingAssignment?.description || '',
-        points: existingAssignment?.points || 100,
-        dueDate: existingAssignment?.dueDate || '',
-        availableFrom: existingAssignment?.availableFrom || '',
-        availableUntil: existingAssignment?.availableUntil || '',
-        assignmentGroup: existingAssignment?.assignmentGroup || 'ASSIGNMENTS',
-        displayGradeAs: existingAssignment?.displayGradeAs || 'PERCENTAGE',
-        submissionType: existingAssignment?.submissionType || 'ONLINE',
-        onlineEntryOptions: existingAssignment?.onlineEntryOptions || {
+        _id: uuidv4(),
+        name: '',
+        description: '',
+        points: 100,
+        dueDate: '',
+        availableFrom: '',
+        availableUntil: '',
+        assignmentGroup: 'ASSIGNMENTS',
+        displayGradeAs: 'PERCENTAGE',
+        submissionType: 'ONLINE',
+        onlineEntryOptions: {
             textEntry: false,
             websiteURL: true,
             mediaRecordings: false,
@@ -35,19 +26,11 @@ export default function AssignmentEditor() {
         },
         course: cid,
     });
-
-    useEffect(() => {
-        if (existingAssignment) {
-            setAssignment(existingAssignment);
-        }
-    }, [existingAssignment]);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSave = () => {
-        if (existingAssignment) {
-            dispatch(updateAssignment(assignment)); // Dispatch the updateAssignment action
-        } else {
-            dispatch(addAssignment(assignment)); // Dispatch the addAssignment action
-        }
+        dispatch(addAssignment(assignment)); // Dispatch the addAssignment action
         navigate(`/Kambaz/Courses/${cid}/Assignments`); // Navigate back to the assignments list
     };
 
@@ -55,10 +38,9 @@ export default function AssignmentEditor() {
         navigate(`/Kambaz/Courses/${cid}/Assignments`); // Navigate back to the assignments list
     };
 
-    console.log("assignment:", assignment);
     return (
         <div>
-            <h1>{existingAssignment ? 'Edit Assignment' : 'Create New Assignment'}</h1>
+            <h1>Create New Assignment</h1>
             <Form>
                 <Form.Group controlId="assignmentName">
                     <Form.Label>Name</Form.Label>

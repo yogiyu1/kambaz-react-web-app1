@@ -18,6 +18,7 @@ export default function Assignments({ courseId }: { courseId: string }){
     const { cid } = useParams()
     const navigate = useNavigate();
     const assignments = db.assignments.filter((assignment) => assignment.course === cid);
+    console.log("assignments are", assignments)
     return(
         <div id="wd-assignments" className="text-nowrap">
     
@@ -30,7 +31,7 @@ export default function Assignments({ courseId }: { courseId: string }){
                 size="lg" 
                 className="me-1 float-end rounded-0" 
                 id="wd-add-module-btn"
-                onClick={() => navigate(`/Kambaz/Courses/${courseId}/Assignments/New`)}
+                onClick={() => navigate(`/Kambaz/Courses/${cid}/Assignments/New`)}
             >
             <FaPlus className="position-relative me-3" style={{ bottom: "1px" }} />
                 Assignment

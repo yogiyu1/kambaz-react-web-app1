@@ -4,6 +4,8 @@ import "./styles.css";
 import { Routes, Route, Navigate } from "react-router";
 import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
+import AssignmentEditor from "./Courses/Assignments/AssignmentEditor"; // Import the AssignmentEditor component
+import ErrorBoundary from "./ErrorBoundary"; // Import the ErrorBoundary component
 import * as db from "./Database";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -60,6 +62,8 @@ export default function Kambaz() {
                         </ProtectedRoute>
                     } />
                     <Route path="/Courses/:cid/*" element={<ProtectedRoute><Courses courses={courses}/></ProtectedRoute>} />
+                    <Route path="/Courses/:cid/Assignments/New" element={<ErrorBoundary><AssignmentEditor /></ErrorBoundary>} /> {/* Wrap with ErrorBoundary */}
+                    <Route path="/Courses/:cid/Assignments/Edit/:aid" element={<ErrorBoundary><AssignmentEditor /></ErrorBoundary>} /> {/* Wrap with ErrorBoundary */}
                     <Route path="/Calendar" element={<h1>Calendar</h1>} />
                     <Route path="/Inbox" element={<h1>Inbox</h1>} />
                 </Routes>

@@ -10,6 +10,7 @@ export default function AssignmentEditor() {
     return <p className="text-danger text-center">Assignment not found.</p>;
   }
 
+  console.log("wtf?", assignment);
   return (
     <Form.Group className="container p-3 w-50 mx-2">
 
