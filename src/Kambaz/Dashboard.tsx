@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
 import { Row, Col, Card, Button, FormControl } from "react-bootstrap";
-import * as db from "./Database";
 import { useState } from "react";
 import { enrollCourse, unenrollCourse } from "./Courses/Enrollments/reducer";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,20 +6,22 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
 export default function Dashboard(
-    { courses, course, setCourse, addNewCourse,
-        deleteCourse, updateCourse }: {
-        courses: any[]; course: any; setCourse: (course: any) => void;
-        addNewCourse: () => void; 
-        deleteCourse: (course: any) => void;
-        updateCourse: () => void; }) {
+    { coursesState, course, setCourse, handleAddCourse,
+        handleDeleteCourse, handleUpdateCourse }: {
+            coursesState: { courses: any[] };
+        course: any; setCourse: (course: any) => void;
+        handleAddCourse: (name: string, description: string) => void; 
+        handleDeleteCourse: (courseId: string) => void;
+        handleUpdateCourse: (course: any) => void; }) {
     
+    console.log("coursesState:", coursesState);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
     const publishedCourses = currentUser.role === "FACULTY" 
-        ? courses 
-        : courses.filter((course) =>
+        ? coursesState?.courses
+        : coursesState?.courses.filter((course) =>
             enrollments.some(
                 (enrollment: any) =>
                     enrollment.user === currentUser._id &&
@@ -32,7 +32,7 @@ export default function Dashboard(
     const [showAllCourses, setShowAllCourses] = useState(true);
     const unenrolledCourses = currentUser.role === "FACULTY" || showAllCourses
     ? []
-    : courses.filter((course) =>
+    : coursesState?.courses.filter((course) =>
         !enrollments.some(
             (enrollment: any) =>
                 enrollment.user === currentUser._id &&
@@ -41,7 +41,6 @@ export default function Dashboard(
     );
 
     const handleUnenroll = (user: string, course: string) => {
-        
         dispatch(unenrollCourse({user, course}));
     };
 
@@ -61,11 +60,12 @@ export default function Dashboard(
                     <h5>New Course
                         <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
-                            onClick={addNewCourse}>
+                            onClick={() => handleAddCourse(course.name, course.description)}
+                            >
                             Add
                         </button>
                         <button className="btn btn-warning float-end me-2"
-                            onClick={updateCourse} 
+                            onClick={() => handleUpdateCourse(course)}
                             id="wd-update-course-click">
                             Update
                         </button>
@@ -122,7 +122,7 @@ export default function Dashboard(
                                             <>
                                                 <button onClick={(event) => {
                                                     event.preventDefault();
-                                                    deleteCourse(course._id);
+                                                    handleDeleteCourse(course._id);
                                                 }} className="btn btn-danger float-end"
                                                     id="wd-delete-course-click">
                                                     Delete
@@ -180,7 +180,7 @@ export default function Dashboard(
                                             <>
                                                 <button onClick={(event) => {
                                                     event.preventDefault();
-                                                    deleteCourse(course._id);
+                                                    handleDeleteCourse(course._id);
                                                 }} className="btn btn-danger float-end"
                                                     id="wd-delete-course-click">
                                                     Delete

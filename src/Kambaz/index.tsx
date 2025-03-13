@@ -6,41 +6,38 @@ import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
 import AssignmentEditor from "./Courses/Assignments/AssignmentEditor"; // Import the AssignmentEditor component
 import ErrorBoundary from "./ErrorBoundary"; // Import the ErrorBoundary component
-import * as db from "./Database";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ProtectedRoute from "./Account/ProtectedRoute";
+import { useSelector, useDispatch } from "react-redux";
+import { addCourse, updateCourse, deleteCourse } from "./Courses/reducer";
 
 export default function Kambaz() {
-    const [courses, setCourses] = useState<any[]>(db.courses);
+    const coursesState = useSelector((state: any) => state.coursesReducer);
     const [course, setCourse] = useState<any>({
         _id: uuidv4(), name: "", number: "", startDate: "", endDate: "", description: "",
     });
 
-    const addNewCourse = () => {
-        console.log("Add button clicked");
-        const newCourse = { ...course, _id: uuidv4() };
-        setCourses([...courses, newCourse]);
-        console.log("New course added:", newCourse);
-        // Reset the course state after adding
-        setCourse({ _id: uuidv4(), name: "", number: "", startDate: "", endDate: "", description: "" });
+    const dispatch = useDispatch();
+    
+
+    const handleAddCourse = (name: string, description: string) => {
+        console.log("Add button clicked Redux");
+        const newCourse = { _id: uuidv4(), name: name, description: description };
+        dispatch(addCourse(newCourse));
     };
 
-    const deleteCourse = (courseId: any) => {
-        setCourses(courses.filter((course) => course._id !== courseId));
+
+    const handleDeleteCourse = (courseId: string) => {
+        console.log("delete button clicked Redux, courseId", courseId);
+        dispatch(deleteCourse(courseId));
     };
 
-    const updateCourse = () => {
-        setCourses(
-            courses.map((c) => {
-                if (c._id === course._id) {
-                    return course;
-                } else {
-                    return c;
-                }
-            })
-        );
+    const handleUpdateCourse = (course: any) => {
+        console.log("update button clicked Redux, course", course);
+        dispatch(updateCourse(course));
     };
+
 
     return (
         <div id="wd-kambaz">
@@ -52,16 +49,16 @@ export default function Kambaz() {
                     <Route path="/Dashboard" element={
                         <ProtectedRoute>
                             <Dashboard
-                                courses={courses}
+                                coursesState={coursesState}
                                 course={course}
                                 setCourse={setCourse}
-                                addNewCourse={addNewCourse}
-                                deleteCourse={deleteCourse}
-                                updateCourse={updateCourse}
+                                handleAddCourse={handleAddCourse}
+                                handleDeleteCourse={handleDeleteCourse}
+                                handleUpdateCourse={handleUpdateCourse}
                             />
                         </ProtectedRoute>
                     } />
-                    <Route path="/Courses/:cid/*" element={<ProtectedRoute><Courses courses={courses}/></ProtectedRoute>} />
+                    <Route path="/Courses/:cid/*" element={<ProtectedRoute><Courses courses={coursesState}/></ProtectedRoute>} />
                     <Route path="/Courses/:cid/Assignments/New" element={<ErrorBoundary><AssignmentEditor /></ErrorBoundary>} /> {/* Wrap with ErrorBoundary */}
                     <Route path="/Courses/:cid/Assignments/Edit/:aid" element={<ErrorBoundary><AssignmentEditor /></ErrorBoundary>} /> {/* Wrap with ErrorBoundary */}
                     <Route path="/Calendar" element={<h1>Calendar</h1>} />

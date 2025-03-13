@@ -12,7 +12,7 @@ interface EnrollmentState {
 }
 
 const initialState: EnrollmentState  = {
-  enrollments: enrollments, // 持久化数据
+  enrollments: enrollments, 
 };
 
 const enrollmentSlice = createSlice({

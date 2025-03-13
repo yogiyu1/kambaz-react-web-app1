@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteAssignment } from './reducer'; // Import the delete action
 
-export default function Assignments({ courseId }: { courseId: string }) {
+export default function Assignments({ }: { courseId: string }) {
     const { cid } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
