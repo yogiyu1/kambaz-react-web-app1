@@ -13,7 +13,7 @@ import { FaCaretDown } from "react-icons/fa";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from './reducer'; // Import the delete action
+import { deleteAssignment } from './reducer'; 
 
 export default function Assignments({ }: { courseId: string }) {
     const { cid } = useParams();

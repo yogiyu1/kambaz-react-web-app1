@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addAssignment, updateAssignment } from './reducer'; // Import the actions
+import { addAssignment, updateAssignment } from './reducer';
 
 interface AssignmentDetail {
     dueDate: string;
@@ -49,15 +49,15 @@ export default function AssignmentEditor() {
 
     const handleSave = () => {
         if (existingAssignment) {
-            dispatch(updateAssignment(assignment)); // Dispatch the updateAssignment action
+            dispatch(updateAssignment(assignment));
         } else {
-            dispatch(addAssignment(assignment)); // Dispatch the addAssignment action
+            dispatch(addAssignment(assignment));
         }
-        navigate(`/Kambaz/Courses/${cid}/Assignments`); // Navigate back to the assignments list
+        navigate(`/Kambaz/Courses/${cid}/Assignments`);
     };
 
     const handleCancel = () => {
-        navigate(`/Kambaz/Courses/${cid}/Assignments`); // Navigate back to the assignments list
+        navigate(`/Kambaz/Courses/${cid}/Assignments`);
     };
 
     console.log("assignment:", assignment);
@@ -157,6 +157,7 @@ export default function AssignmentEditor() {
                     <Form.Control
                       type="datetime-local"
                       defaultValue={assignment.detail.dueDate}
+                      onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, dueDate: e.target.value } })}
                     />
                   </Col>
                 </Row>
@@ -172,12 +173,14 @@ export default function AssignmentEditor() {
                     <Form.Control
                       type="datetime-local"
                       defaultValue={assignment.detail.availableFrom}
+                      onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, availableFrom: e.target.value } })}
                     />
                   </Col>
                   <Col sm={6}>
                     <Form.Control
                       type="datetime-local"
                       defaultValue={assignment.detail.dueDate}
+                      onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, dueDate: e.target.value } })}
                     />
                   </Col>
                 </Row>
