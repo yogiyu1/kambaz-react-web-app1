@@ -14,6 +14,7 @@ import { addCourse, updateCourse, deleteCourse } from "./Courses/reducer";
 
 export default function Kambaz() {
     const coursesState = useSelector((state: any) => state.coursesReducer);
+    const courses = coursesState.courses;
     const [course, setCourse] = useState<any>({
         _id: uuidv4(), name: "", number: "", startDate: "", endDate: "", description: "",
     });
@@ -58,7 +59,7 @@ export default function Kambaz() {
                             />
                         </ProtectedRoute>
                     } />
-                    <Route path="/Courses/:cid/*" element={<ProtectedRoute><Courses courses={coursesState}/></ProtectedRoute>} />
+                    <Route path="/Courses/:cid/*" element={<ProtectedRoute><Courses courses={courses}/></ProtectedRoute>} />
                     <Route path="/Courses/:cid/Assignments/New" element={<ErrorBoundary><AssignmentEditor /></ErrorBoundary>} /> 
                     <Route path="/Courses/:cid/Assignments/Edit/:aid" element={<ErrorBoundary><AssignmentEditor /></ErrorBoundary>} /> 
                     <Route path="/Calendar" element={<h1>Calendar</h1>} />
