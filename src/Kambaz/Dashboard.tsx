@@ -1,10 +1,7 @@
 import { Row, Col, Card, Button, FormControl } from "react-bootstrap";
-import { useState, useEffect } from "react";
-import { useSelector,useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import * as coursesClient from "./Courses/client";
-import * as enrollmentClient from "./Courses/Enrollments/client";
-import { setEnrollments } from './Courses/Enrollments/reducer'; 
 // import { useDispatch } from 'react-redux';
 export default function Dashboard(
     { courses, unenrolledCourses, course, setCourse, handleAddCourse,
