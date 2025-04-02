@@ -59,7 +59,8 @@ export default function AssignmentEditor() {
     const handleCancel = () => {
         navigate(`/Kambaz/Courses/${cid}/Assignments`);
     };
-
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const isFaculty = currentUser?.role === "FACULTY";
     console.log("assignment:", assignment);
     console.log("existingAssignment:", existingAssignment);
     return (
@@ -69,6 +70,7 @@ export default function AssignmentEditor() {
             <Form.Label>Assignment Name</Form.Label>
             <Form.Control type="text" 
             defaultValue={assignment.title} 
+            disabled={!isFaculty}
             onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}/>
           </Form.Group>
     
@@ -77,6 +79,7 @@ export default function AssignmentEditor() {
               as="textarea"
               style={{ height: "200px" }}
               defaultValue={assignment.detail.description}
+              disabled={!isFaculty}
               onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, description: e.target.value } })}
               />
           </Form.Group>
@@ -86,7 +89,9 @@ export default function AssignmentEditor() {
               <Form.Label>Points</Form.Label>
             </Col>
             <Col sm={8} className="ms-auto">
+              
               <Form.Control type="number" defaultValue={assignment.detail?.points || 100} 
+              disabled={!isFaculty}
               onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, points: parseInt(e.target.value) } })}
               />
             </Col>
@@ -97,7 +102,8 @@ export default function AssignmentEditor() {
               Assignment Group
             </Form.Label>
             <Col sm={8}>
-              <Form.Select>
+              <Form.Select disabled={!isFaculty}>
+                
                 <option value="QUIZZES">QUIZZES</option>
                 <option value="PROJECT">PROJECT</option>
                 <option value="ASSIGNMENTS" selected>ASSIGNMENTS</option>
@@ -111,9 +117,9 @@ export default function AssignmentEditor() {
               Display Grade as
             </Form.Label>
             <Col sm={8} className="ms-auto">
-              <Form.Select>
-                <option value="PERCENTAGE" selected>Percentage</option>
-                <option value="GRADE">Grade</option>
+              <Form.Select disabled={!isFaculty}>
+                <option  value="PERCENTAGE" selected>Percentage</option>
+                <option  value="GRADE">Grade</option>
               </Form.Select>
             </Col>
           </Form.Group>
@@ -124,17 +130,17 @@ export default function AssignmentEditor() {
             </Form.Label>
             <Col sm={8} className="ms-auto">
               <Form.Group className="p-3 border rounded">
-                <Form.Select>
+                <Form.Select disabled={!isFaculty}>
                   <option value="ONLINE" selected>Online</option>
                   <option value="INPERSON">In-person</option>
                 </Form.Select>
                 <Form.Label className="mt-3">Online Entry Options</Form.Label>
                 <div className="ms-3">
-                  <Form.Check type="checkbox" label="Text Entry" />
-                  <Form.Check type="checkbox" label="Website URL" defaultChecked />
-                  <Form.Check type="checkbox" label="Media Recordings" />
-                  <Form.Check type="checkbox" label="Student Annotation" />
-                  <Form.Check type="checkbox" label="File Uploads" />
+                  <Form.Check disabled={!isFaculty} type="checkbox" label="Text Entry" />
+                  <Form.Check disabled={!isFaculty} type="checkbox" label="Website URL" defaultChecked />
+                  <Form.Check disabled={!isFaculty} type="checkbox" label="Media Recordings" />
+                  <Form.Check disabled={!isFaculty} type="checkbox" label="Student Annotation" />
+                  <Form.Check disabled={!isFaculty} type="checkbox" label="File Uploads" />
                 </div>
               </Form.Group>
             </Col>
@@ -148,7 +154,7 @@ export default function AssignmentEditor() {
               <Form.Group className="p-3 border rounded">
                 <Form.Group className="mb-3">
                   <Form.Label>Assign to</Form.Label>
-                  <Form.Control type="text" placeholder="Everyone" />
+                  <Form.Control type="text" disabled={!isFaculty} placeholder="Everyone" />
                 </Form.Group>
     
                 <Row className="mb-3">
@@ -157,6 +163,7 @@ export default function AssignmentEditor() {
                     <Form.Control
                       type="datetime-local"
                       defaultValue={assignment.detail.dueDate}
+                      disabled={!isFaculty}
                       onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, dueDate: e.target.value } })}
                     />
                   </Col>
@@ -173,6 +180,7 @@ export default function AssignmentEditor() {
                     <Form.Control
                       type="datetime-local"
                       defaultValue={assignment.detail.availableFrom}
+                      disabled={!isFaculty}
                       onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, availableFrom: e.target.value } })}
                     />
                   </Col>
@@ -180,6 +188,7 @@ export default function AssignmentEditor() {
                     <Form.Control
                       type="datetime-local"
                       defaultValue={assignment.detail.dueDate}
+                      disabled={!isFaculty}
                       onChange={(e) => setAssignment({ ...assignment, detail: { ...assignment.detail, dueDate: e.target.value } })}
                     />
                   </Col>
@@ -187,7 +196,8 @@ export default function AssignmentEditor() {
               </Form.Group>
             </Col>
           </Form.Group>
-    
+          {currentUser.role === "FACULTY" && (
+                <>
           <hr />
     
           <div className="float-end">
@@ -198,6 +208,8 @@ export default function AssignmentEditor() {
                     Cancel
             </Button>
           </div>
+          </>
+            )}
         </Form.Group>
       );
 }

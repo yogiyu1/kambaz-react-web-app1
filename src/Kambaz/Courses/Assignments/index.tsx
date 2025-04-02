@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from "react-router";
 import { FaPlus, FaTrash } from "react-icons/fa6";
-import LessonControlButtons from "../Modules/LessonControlButtons";
+// import LessonControlButtons from "../Modules/LessonControlButtons";
+import GreenCheckmark from "../Modules/GreenCheckmark"; // Assuming you have this component in the same directory
 import { IoEllipsisVertical } from "react-icons/io5";
 import { BsGripVertical } from "react-icons/bs";
 import { InputGroup, Row, Col } from "react-bootstrap";
@@ -25,6 +26,7 @@ export default function Assignments({ }: { courseId: string }) {
     console.log("assignments:", assignments);
     const [showModal, setShowModal] = useState(false);
     const [assignmentToDelete, setAssignmentToDelete] = useState<any>(null);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
 
     const handleDeleteClick = (assignment: any) => {
         setAssignmentToDelete(assignment);
@@ -46,6 +48,8 @@ export default function Assignments({ }: { courseId: string }) {
     console.log("assignments:", assignments);
     return (
         <div id="wd-assignments" className="text-nowrap">
+            {currentUser.role === "FACULTY" && (
+                <>
             <Button 
                 variant="danger" 
                 size="lg" 
@@ -56,6 +60,8 @@ export default function Assignments({ }: { courseId: string }) {
                 <FaPlus className="position-relative me-3" style={{ bottom: "1px" }} />
                 Assignment
             </Button>
+            </>
+            )}
 
             <Button variant="secondary" size="lg" className="me-1 float-end rounded-0" id="wd-add-module-btn">
                 <FaPlus className="position-relative me-3" style={{ bottom: "1px" }} />
@@ -114,14 +120,23 @@ export default function Assignments({ }: { courseId: string }) {
                         </Col>
 
                         <Col sm={3} className="text-end">
-                            <LessonControlButtons />
-                            <Button
-                                variant="link"
-                                className="float-end text-danger"
-                                onClick={() => handleDeleteClick(assignment)}
-                            >
-                                <FaTrash />
-                            </Button>
+                            {
+                            <div className="float-end">
+                                {currentUser.role === "FACULTY" && (
+                                    <>
+                                    <Button
+                                        variant="link"
+                                        className="p-0 m-0 border-0 bg-transparent me-2 text-danger"
+                                        onClick={() => handleDeleteClick(assignment)}
+                                    >
+                                        <FaTrash className="fs-5" />
+                                    </Button>
+                                    </>
+                                )}
+                                <GreenCheckmark />
+                                <IoEllipsisVertical className="fs-4" />
+                            </div>
+}
                         </Col>
                     </Row>
                     </ListGroup.Item>

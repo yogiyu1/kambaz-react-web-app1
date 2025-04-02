@@ -9,7 +9,7 @@ import PeopleTable from "./People/Table";
 
 export default function Courses({ courses }: { courses: any[] }) {
   const { cid } = useParams();
-  console.log(courses)
+  console.log("current courses", courses)
   const course = courses.find((c) => c._id === cid);
   const { pathname } = useLocation();
 
