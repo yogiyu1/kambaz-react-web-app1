@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Link } from "react-router";
 import { FaPlus, FaTrash } from "react-icons/fa6";
 // import LessonControlButtons from "../Modules/LessonControlButtons";
@@ -14,7 +14,9 @@ import { FaCaretDown } from "react-icons/fa";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from './reducer'; 
+import { deleteAssignment, setAssignment } from './reducer'; 
+import * as coursesClient from "./../client";
+import * as asignmentClient from "./client";
 
 export default function Assignments({ }: { courseId: string }) {
     const { cid } = useParams();
@@ -28,6 +30,24 @@ export default function Assignments({ }: { courseId: string }) {
     const [assignmentToDelete, setAssignmentToDelete] = useState<any>(null);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
 
+    const fetchAssignments = async () => {
+        const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignment(assignments));
+      };
+      useEffect(() => {
+        fetchAssignments();
+      }, []);
+    
+
+
+    const deleteAssignmentForCourse = async (assignment: any) => {
+            console.log("cid:", cid);
+            console.log("assignment to be deleted:", assignment);
+            if (!cid) return;
+            await asignmentClient.deleteAssignment(cid, assignment);
+            dispatch(deleteAssignment(assignment));
+        }
+
     const handleDeleteClick = (assignment: any) => {
         setAssignmentToDelete(assignment);
         setShowModal(true);
@@ -35,7 +55,7 @@ export default function Assignments({ }: { courseId: string }) {
 
     const handleConfirmDelete = () => {
         if (assignmentToDelete) {
-            dispatch(deleteAssignment(assignmentToDelete._id));
+            deleteAssignmentForCourse(assignmentToDelete._id);
         }
         setShowModal(false);
         setAssignmentToDelete(null);

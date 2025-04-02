@@ -17,7 +17,7 @@ import * as courseClient from "./Courses/client";
 
 export default function Kambaz() {
     const coursesState = useSelector((state: any) => state.coursesReducer);
-    const [courses, _setCourses]= coursesState.courses;
+    const [_courses, _setCourses]= coursesState.courses;
     const [course, setCourse] = useState<any>({
         _id: uuidv4(), name: "", number: "", startDate: "", endDate: "", description: "",
     });

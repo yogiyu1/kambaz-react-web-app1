@@ -4,6 +4,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { addAssignment, updateAssignment } from './reducer';
+import * as asignmentClient from "./client";
 
 interface AssignmentDetail {
     dueDate: string;
@@ -22,6 +23,8 @@ interface Assignment {
 
 export default function AssignmentEditor() {
     const { cid, aid } = useParams();
+    console.log("cid:", cid);
+    console.log("aid:", aid);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const assignmentsState = useSelector((state: any) => state.assignmentsReducer);
@@ -29,7 +32,7 @@ export default function AssignmentEditor() {
     const existingAssignment = assignmentsState?.assignments?.find((assignment: any) => assignment._id === aid);
 
     const [assignment, setAssignment] = useState<Assignment>({
-        _id: aid || uuidv4(),
+        _id: aid || '',
         title: existingAssignment?.title || '',
         course: cid || '',
         detail: {
@@ -47,11 +50,33 @@ export default function AssignmentEditor() {
         }
     }, [existingAssignment]);
 
+    const createAssignmentForCourse = async (assignment: any) => {
+        console.log("cid:", cid);
+        console.log("assignment to be added:", assignment);
+        if (!cid) return;
+        const newAssignment = await asignmentClient.createAssignment(cid, assignment);
+        dispatch(addAssignment(newAssignment));
+    }
+
+    const updateAssignmentForCourse = async (assignment: any) => {
+        console.log("cid:", cid);
+        console.log("aid:", aid);
+        console.log("assignment to be updated:", assignment);
+        if (!cid) return;
+        if (!cid || !aid) {
+            console.error("Course ID or Assignment ID is missing.");
+            return;
+        }
+        const newAssignment = await asignmentClient.updateAssignment(cid, aid, assignment);
+        dispatch(updateAssignment(newAssignment));
+    }
+
     const handleSave = () => {
+        console.log("existing assignment?", existingAssignment);
         if (existingAssignment) {
-            dispatch(updateAssignment(assignment));
+            updateAssignmentForCourse(assignment);
         } else {
-            dispatch(addAssignment(assignment));
+            createAssignmentForCourse(assignment);
         }
         navigate(`/Kambaz/Courses/${cid}/Assignments`);
     };
