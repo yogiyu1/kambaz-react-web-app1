@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import Session from "./Account/Session";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
+import * as enrollmentClient from "./Courses/Enrollments/client";
 
 export default function Kambaz() {
     const coursesState = useSelector((state: any) => state.coursesReducer);
@@ -24,6 +25,7 @@ export default function Kambaz() {
 
     // const dispatch = useDispatch();
     const [userCourses, setUserCourses] = useState<any[]>([]);
+    const [unenrolledCourses, setunenrolledCourses] = useState<any[]>([]);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const addNewCourse = async () => {
         const newCourse = await userClient.createCourse(course);
@@ -34,10 +36,13 @@ export default function Kambaz() {
       try {
         const myCourses = await userClient.findMyCourses();
         setUserCourses(myCourses);
+        const unerolledCourses = await userClient.findUnenrolledCourses();
+        setunenrolledCourses(unerolledCourses);
       } catch (error) {
         console.error(error);
       }
     };
+
 
     const handleupdateCourse = async () => {
         const updatedCourse = await courseClient.updateCourse(course);
@@ -52,29 +57,20 @@ export default function Kambaz() {
       fetchCourses();
     }, [currentUser]);
 
+
     const deleteCourse = async (courseId: string) => {
         await courseClient.deleteCourse(courseId);
         setUserCourses(userCourses.filter((course) => course._id !== courseId));
     };
 
-    // const updateCourse = async () => {
-    //     const updateCourse = async () => {
-    //         await courseClient.updateCourse(course);
-    //         setCourses(courses.map((c: { _id: any; }) => {
-    //             if (c._id === course._id) { return course; }
-    //             else { return c; }
-    //         }))}};
-    // const handleAddCourse = (name: string, description: string) => {
-    //     console.log("Add button clicked Redux");
-    //     const newCourse = { _id: uuidv4(), name: name, description: description };
-    //     dispatch(addCourse(newCourse));
-    // };
-
-
-    // function handleDeleteCourse(courseId: string) {
-    //         console.log("delete button clicked Redux, courseId", courseId);
-    //         dispatch(deleteCourse(courseId));
-    //     }
+    const handleEnroll = async (userId: string, courseId: string) => {
+        await enrollmentClient.enroll(userId, courseId);
+        await fetchCourses();
+    };
+    const handleUnenroll = async (userId: string, courseId: string) => {
+        await enrollmentClient.unenroll(userId, courseId);
+        await fetchCourses();
+    };
 
     
     
@@ -92,11 +88,14 @@ export default function Kambaz() {
                         <ProtectedRoute>
                             <Dashboard
                                 courses={userCourses}
+                                unenrolledCourses={unenrolledCourses}
                                 course={course}
                                 setCourse={setCourse}
                                 handleAddCourse={addNewCourse}
                                 handleDeleteCourse={deleteCourse}
                                 handleUpdateCourse={handleupdateCourse}
+                                handleEnroll={handleEnroll}
+                                handleUnenroll={handleUnenroll}
                             />
                         </ProtectedRoute>
                     } />

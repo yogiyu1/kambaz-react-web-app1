@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { enrollments } from "../../Database";
 
 interface Enrollment {
     _id: string;
@@ -12,13 +11,17 @@ interface EnrollmentState {
 }
 
 const initialState: EnrollmentState  = {
-  enrollments: enrollments, 
+  enrollments: [],
 };
 
 const enrollmentSlice = createSlice({
   name: "enrollments",
   initialState,
   reducers: {
+    setEnrollments:(state, action) => {
+      state.enrollments = action.payload;
+      console.log("setEnrollments payload", action.payload);
+    },
     enrollCourse: (state, { payload }) => {
         console.log("add payload:", payload);
         state.enrollments = [...state.enrollments, payload];
@@ -32,5 +35,5 @@ const enrollmentSlice = createSlice({
   },
 });
 
-export const { enrollCourse, unenrollCourse } = enrollmentSlice.actions;
+export const { setEnrollments, enrollCourse, unenrollCourse } = enrollmentSlice.actions;
 export default enrollmentSlice.reducer;

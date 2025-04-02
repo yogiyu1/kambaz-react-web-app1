@@ -7,6 +7,13 @@ export const findMyCourses = async () => {
     console.log("findMyCourses", data);
     return data;
   };
+
+export const findUnenrolledCourses = async () => {
+  const { data } = await axiosWithCredentials.get(`${REMOTE_SERVER}/api/users/current/unenrolledCourses`);
+  console.log("unenrolled data", data);
+  return data;
+};
+
 export const signin = async (credentials: any) => {
   const response = await axiosWithCredentials.post( `${USERS_API}/signin`, credentials );
   return response.data;
