@@ -2,9 +2,7 @@ export default function Lab1(){
     return  (
         <div id = "wd-lab1">
             <h1>Xiaojun Yu - CS5610 </h1> 
-            Please
-            <a href="https://github.com/yogiyu1/kambaz-react-web-app1" id="wd-lipsum">click here</a>
-            to visit my code repository on GitHub<br/>
+            <br/>
             <h2>Lab 1</h2>
             <h3>HTML Examples</h3>
             <div id ="wd-h-tag">
