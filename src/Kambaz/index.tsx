@@ -10,7 +10,6 @@ import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import { useSelector } from "react-redux";
-// import { addCourse, updateCourse, deleteCourse } from "./Courses/reducer";
 import Session from "./Account/Session";
 import * as userClient from "./Account/client";
 import * as courseClient from "./Courses/client";
@@ -22,19 +21,16 @@ export default function Kambaz() {
     const [course, setCourse] = useState<any>({
         _id: uuidv4(), name: "", number: "", startDate: "", endDate: "", description: "",
     });
-
-    // const dispatch = useDispatch();
     const [userCourses, setUserCourses] = useState<any[]>([]);
     const [unenrolledCourses, setunenrolledCourses] = useState<any[]>([]);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const addNewCourse = async () => {
-        const newCourse = await userClient.createCourse(course);
+        const newCourse = await courseClient.createCourse(course);
         setUserCourses([ ...userCourses, newCourse ]);
       };
-    
     const fetchCourses = async () => {
       try {
-        const myCourses = await userClient.findMyCourses();
+        const myCourses = await courseClient.fetchAllCourses();
         setUserCourses(myCourses);
         const unerolledCourses = await userClient.findUnenrolledCourses();
         setunenrolledCourses(unerolledCourses);
@@ -42,15 +38,10 @@ export default function Kambaz() {
         console.error(error);
       }
     };
-
-
     const handleupdateCourse = async () => {
         const updatedCourse = await courseClient.updateCourse(course);
         console.log("updatedcourses", updatedCourse);
-        setUserCourses(userCourses.map((c: { _id: any; }) => {
-            if (c._id === updatedCourse._id) { return updatedCourse; }
-            else { return c; }
-        }))
+        setUserCourses(updatedCourse)
     };
     
     useEffect(() => {
@@ -59,7 +50,7 @@ export default function Kambaz() {
 
 
     const deleteCourse = async (courseId: string) => {
-        await courseClient.deleteCourse(courseId);
+        const status = await courseClient.deleteCourse(courseId);
         setUserCourses(userCourses.filter((course) => course._id !== courseId));
     };
 

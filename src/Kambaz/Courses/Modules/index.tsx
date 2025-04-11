@@ -16,19 +16,22 @@ export default function Modules() {
     const { modules } = useSelector((state: any) => state.modulesReducer);
     const dispatch = useDispatch();
     const fetchModules = async () => {
-      const modules = await coursesClient.findModulesForCourse(cid as string);
+      const modules = await coursesClient.findModulesForCourse(cid!);
       dispatch(setModules(modules));
     };
     useEffect(() => {
       fetchModules();
-    }, []);
-    
-    const createModuleForCourse = async () => {
-      if (!cid) return;
-      const newModule = { name: moduleName, course: cid };
-      const module = await coursesClient.createModuleForCourse(cid, newModule);
-      dispatch(addModule(module));
+    }, [cid]);
+
+    const addModuleHandler = async () => {
+      const newModule = await coursesClient.createModuleForCourse(cid!, {
+        name: moduleName,
+        course: cid,
+      });
+      dispatch(addModule(newModule));
+      setModuleName("");
     };
+
     const removeModule = async (moduleId: string) => {
       await modulesClient.deleteModule(moduleId);
       dispatch(deleteModule(moduleId));
@@ -42,7 +45,7 @@ export default function Modules() {
 
     return (
         <div className="wd-modules">
-        <ModulesControls moduleName={moduleName} setModuleName={setModuleName} addModule={createModuleForCourse} />
+        <ModulesControls moduleName={moduleName} setModuleName={setModuleName} addModule={addModuleHandler} />
         <br /><br /><br /><br />
             <ul id="wd-modules" className="list-group rounded-0">
         {modules

@@ -40,8 +40,9 @@ export default function AssignmentEditor() {
             availableFrom: existingAssignment?.detail?.availableFrom || '',
             description: existingAssignment?.detail?.description || '',
             modules: existingAssignment?.detail?.modules || [],
-        },
-    });
+},
+        });
+
 
     useEffect(() => {
         if (existingAssignment) {
@@ -49,11 +50,15 @@ export default function AssignmentEditor() {
         }
     }, [existingAssignment]);
 
-    const createAssignmentForCourse = async (assignment: any) => {
-        console.log("cid:", cid);
-        console.log("assignment to be added:", assignment);
-        if (!cid) return;
-        const newAssignment = await asignmentClient.createAssignment(cid, assignment);
+    // const createAssignmentForCourse = async (assignment: any) => {
+    //     console.log("cid:", cid);
+    //     console.log("assignment to be added:", assignment);
+    //     if (!cid) return;
+    //     const newAssignment = await asignmentClient.createAssignment(cid, assignment);
+    //     dispatch(addAssignment(newAssignment));
+    // }
+    const addAssignmentHandler = async (assignment: any) => {
+        const newAssignment = await asignmentClient.createAssignment(cid!, assignment);
         dispatch(addAssignment(newAssignment));
     }
 
@@ -75,7 +80,7 @@ export default function AssignmentEditor() {
         if (existingAssignment) {
             updateAssignmentForCourse(assignment);
         } else {
-            createAssignmentForCourse(assignment);
+            addAssignmentHandler(assignment);
         }
         navigate(`/Kambaz/Courses/${cid}/Assignments`);
     };

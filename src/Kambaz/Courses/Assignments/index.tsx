@@ -15,7 +15,7 @@ import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteAssignment, setAssignment } from './reducer'; 
-import * as coursesClient from "./../client";
+import * as coursesClient from "../client";
 import * as asignmentClient from "./client";
 
 export default function Assignments({ }: { courseId: string }) {
@@ -31,12 +31,12 @@ export default function Assignments({ }: { courseId: string }) {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
 
     const fetchAssignments = async () => {
-        const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+        const assignments = await coursesClient.findAssignmentsForCourse(cid!);
         dispatch(setAssignment(assignments));
       };
       useEffect(() => {
         fetchAssignments();
-      }, []);
+      }, [cid]);
     
 
 
@@ -131,9 +131,10 @@ export default function Assignments({ }: { courseId: string }) {
                         </Link>
                         <p className="wd-assignments-informs text-muted mb-0">
                             <span className="text-danger">
-                            {assignment.detail.modules.join(", ")}
+                            {assignment.detail?.modules?.join(", ") ?? ""}
+
                             </span>{" "}
-                            | <strong>Not available until</strong> {assignment.detail.availableFrom}
+                            | <strong>Not available until</strong> {assignment.detail.availableFrom ?? ""}
                             <br />
                             <strong>Due</strong> {assignment.detail.dueDate} | {assignment.detail.points} pts
                         </p>
