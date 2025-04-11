@@ -49,36 +49,22 @@ export default function AssignmentEditor() {
             setAssignment(existingAssignment);
         }
     }, [existingAssignment]);
-
-    // const createAssignmentForCourse = async (assignment: any) => {
-    //     console.log("cid:", cid);
-    //     console.log("assignment to be added:", assignment);
-    //     if (!cid) return;
-    //     const newAssignment = await asignmentClient.createAssignment(cid, assignment);
-    //     dispatch(addAssignment(newAssignment));
-    // }
     const addAssignmentHandler = async (assignment: any) => {
         const newAssignment = await asignmentClient.createAssignment(cid!, assignment);
         dispatch(addAssignment(newAssignment));
     }
 
-    const updateAssignmentForCourse = async (assignment: any) => {
-        console.log("cid:", cid);
-        console.log("aid:", aid);
-        console.log("assignment to be updated:", assignment);
-        if (!cid) return;
-        if (!cid || !aid) {
-            console.error("Course ID or Assignment ID is missing.");
-            return;
-        }
-        const newAssignment = await asignmentClient.updateAssignment(cid, aid, assignment);
-        dispatch(updateAssignment(newAssignment));
+    const updateAssignmentHandler = async (assignment: any) => {
+        console.log("update assignment:", assignment._id);
+        await asignmentClient.updateAssignment(cid!, assignment._id, assignment);
+        dispatch(updateAssignment(assignment));
+        
     }
 
     const handleSave = () => {
         console.log("existing assignment?", existingAssignment);
         if (existingAssignment) {
-            updateAssignmentForCourse(assignment);
+          updateAssignmentHandler(assignment);
         } else {
             addAssignmentHandler(assignment);
         }

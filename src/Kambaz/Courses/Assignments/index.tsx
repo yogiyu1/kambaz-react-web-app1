@@ -1,8 +1,7 @@
 import { useState,useEffect } from 'react';
 import { Link } from "react-router";
 import { FaPlus, FaTrash } from "react-icons/fa6";
-// import LessonControlButtons from "../Modules/LessonControlButtons";
-import GreenCheckmark from "../Modules/GreenCheckmark"; // Assuming you have this component in the same directory
+import GreenCheckmark from "../Modules/GreenCheckmark"; 
 import { IoEllipsisVertical } from "react-icons/io5";
 import { BsGripVertical } from "react-icons/bs";
 import { InputGroup, Row, Col } from "react-bootstrap";
@@ -41,10 +40,8 @@ export default function Assignments({ }: { courseId: string }) {
 
 
     const deleteAssignmentForCourse = async (assignment: any) => {
-            console.log("cid:", cid);
-            console.log("assignment to be deleted:", assignment);
-            if (!cid) return;
-            await asignmentClient.deleteAssignment(cid, assignment);
+            await asignmentClient.deleteAssignment(cid!, assignment);
+            console.log("deleteAssignmentForCourse response:", assignment);
             dispatch(deleteAssignment(assignment));
         }
 
@@ -65,7 +62,7 @@ export default function Assignments({ }: { courseId: string }) {
         setShowModal(false);
         setAssignmentToDelete(null);
     };
-    console.log("assignments:", assignments);
+
     return (
         <div id="wd-assignments" className="text-nowrap">
             {currentUser.role === "FACULTY" && (

@@ -32,15 +32,16 @@ export default function Modules() {
       setModuleName("");
     };
 
-    const removeModule = async (moduleId: string) => {
+    const deleteModuleHandler = async (moduleId: string) => {
       await modulesClient.deleteModule(moduleId);
       dispatch(deleteModule(moduleId));
     };
-  
-    const saveModule = async (module: any) => {
+   
+    const updateModuleHandler = async (module: any) => {
       await modulesClient.updateModule(module);
       dispatch(updateModule(module));
     };
+   
   
 
     return (
@@ -56,18 +57,16 @@ export default function Modules() {
               <BsGripVertical className="me-2 fs-3" /> {!module.editing && module.name}
               { module.editing && (
                     <FormControl className="w-50 d-inline-block"
-                onChange={(e) => dispatch(updateModule({ ...module, name: e.target.value }))}
+                onChange={(e) => (updateModuleHandler({ ...module, name: e.target.value }))}
                 onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      saveModule({ ...module, editing: false });
+                      updateModuleHandler({ ...module, editing: false });
                     }
                 }}
                 defaultValue={module.name}/>
         )}
         <LessonControlButtons1  moduleId={module._id}
-                deleteModule={(moduleId) => {
-                  removeModule(moduleId);
-                  }}
+                deleteModule={(moduleId) => deleteModuleHandler(moduleId)}
                 editModule={(moduleId) => dispatch(editModule(moduleId))} />
             </div>
             {module.lessons && (

@@ -31,6 +31,7 @@ export const findModulesForCourse = async (courseId: string) => {
 
 export const createModuleForCourse = async (courseId: string, module: any) => {
     const response = await axiosWithCredentials.post(`${COURSES_API}/${courseId}/modules`, module);
+    console.log("createModuleForCourse response:", response.data);
     return response.data;
 }
 

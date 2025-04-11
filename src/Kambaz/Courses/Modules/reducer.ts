@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import { modules } from "../../Database";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 const initialState = {
   modules: [],
 };
@@ -15,12 +15,13 @@ const modulesSlice = createSlice({
 
     addModule: (state, { payload: module }) => {
       const newModule: any = {
-        _id: uuidv4(),
+        _id: module._id,
         lessons: [],
         name: module.name,
         course: module.course,
       };
       state.modules = [...state.modules, newModule] as any;
+      console.log("all modules after add", state.modules);
     },
     deleteModule: (state, { payload: moduleId }) => {
       state.modules = state.modules.filter(
