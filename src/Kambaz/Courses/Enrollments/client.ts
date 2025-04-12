@@ -20,3 +20,10 @@ export const getEnrollments = async () => {
     console.log("get all enrollments response:", response);
     return response.data;
 }
+
+export const findUsersForCourse = async (cid: string) => {
+    console.log("gettingg ppl for course");
+    const response = await axios.get(`${ENROLLMENT_API}/course/${cid}`);
+    console.log("ppl for course response:", response.data);
+    return response.data;
+}

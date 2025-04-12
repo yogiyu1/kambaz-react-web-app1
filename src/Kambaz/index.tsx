@@ -17,7 +17,7 @@ import * as enrollmentClient from "./Courses/Enrollments/client";
 
 export default function Kambaz() {
     const coursesState = useSelector((state: any) => state.coursesReducer);
-    const [_courses, _setCourses]= coursesState.courses;
+    const [_courses, setCourses]= coursesState.courses;
     const [course, setCourse] = useState<any>({
         _id: uuidv4(), name: "", number: "", startDate: "", endDate: "", description: "",
     });
@@ -28,32 +28,33 @@ export default function Kambaz() {
         const newCourse = await courseClient.createCourse(course);
         setUserCourses([ ...userCourses, newCourse ]);
       };
+
     const fetchCourses = async () => {
-      try {
-        const myCourses = await courseClient.fetchAllCourses();
-        setUserCourses(myCourses);
-        const unerolledCourses = await userClient.findUnenrolledCourses();
-        setunenrolledCourses(unerolledCourses);
-      } catch (error) {
-        console.error(error);
-      }
+        try {
+          const myCourses = await await userClient.findCoursesForUser(
+            currentUser._id
+          );
+          setUserCourses(myCourses);
+          const unerolledCourses = await userClient.findUnenrolledCourses();
+          setunenrolledCourses(unerolledCourses);
+        } catch (error) {
+          console.error(error);
+        }
     };
+       
     const handleupdateCourse = async () => {
         const updatedCourse = await courseClient.updateCourse(course);
         console.log("updatedcourses", updatedCourse);
         setUserCourses(updatedCourse)
     };
-    
     useEffect(() => {
       fetchCourses();
     }, [currentUser]);
 
-
     const deleteCourse = async (courseId: string) => {
-        const status = await courseClient.deleteCourse(courseId);
+        await courseClient.deleteCourse(courseId);
         setUserCourses(userCourses.filter((course) => course._id !== courseId));
     };
-
     const handleEnroll = async (userId: string, courseId: string) => {
         await enrollmentClient.enroll(userId, courseId);
         await fetchCourses();
@@ -62,11 +63,6 @@ export default function Kambaz() {
         await enrollmentClient.unenroll(userId, courseId);
         await fetchCourses();
     };
-
-    
-    
-
-
     return (
         <Session>
         <div id="wd-kambaz">

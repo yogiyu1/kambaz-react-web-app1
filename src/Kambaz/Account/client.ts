@@ -9,9 +9,9 @@ export const findMyCourses = async () => {
 };
 
 export const findUnenrolledCourses = async () => {
-  const { data } = await axiosWithCredentials.get(`${REMOTE_SERVER}/api/users/current/unenrolledCourses`);
-  console.log("unenrolled data", data);
-  return data;
+  const response = await axiosWithCredentials.get(`${REMOTE_SERVER}/api/users/current/unenrolledCourses`);
+  console.log("unenrolled data", response.data);
+  return response.data;
 };
 
 export const signin = async (credentials: any) => {
@@ -65,5 +65,10 @@ export const createUser = async (user: any) => {
 };
 export const updateUser = async (user: any) => {
   const response = await axiosWithCredentials.put(`${USERS_API}/${user._id}`, user);
+  return response.data;
+};
+export const findCoursesForUser = async (userId: string) => {
+  const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/courses`);
+  console.log("findCoursesForUser response:", response.data);
   return response.data;
 };
