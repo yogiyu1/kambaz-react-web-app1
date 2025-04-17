@@ -46,7 +46,7 @@ export default function Kambaz() {
     const handleupdateCourse = async () => {
         const updatedCourse = await courseClient.updateCourse(course);
         console.log("updatedcourses", updatedCourse);
-        setUserCourses(updatedCourse)
+        fetchCourses();
     };
     useEffect(() => {
       fetchCourses();
